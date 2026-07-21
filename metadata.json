@@ -1,0 +1,6 @@
+{
+  "name": "Danh Tính Học Toàn Thư",
+  "description": "Ứng dụng đặt tên phong thủy dựa trên Bát Tự và Ngũ Hành của bé.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
