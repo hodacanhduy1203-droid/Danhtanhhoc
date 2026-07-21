@@ -108,21 +108,42 @@ export function isAuspicious(strokes: number): boolean {
   return goodNumbers.includes(strokes) || semiGoodNumbers.includes(strokes);
 }
 
-// "Khoa Học Đặt Tên & Bí Mật Vận Mệnh" - Phonetic elements logic
+// "Khoa Học Đặt Tên & Bí Mật Vận Mệnh" - Phonetic elements logic (Ngũ Âm phát âm tiếng Việt)
+// Căn cứ vào Ngũ âm cổ thư ứng dụng cho chữ quốc ngữ:
+// - Nha âm (Mộc - phát âm từ răng hàm): G, K, KH
+// - Thiệt âm (Hỏa - phát âm từ đầu lưỡi): D, Đ, L, N, T, TH, TR, CH, GI
+// - Môi âm (Thủy - phát âm từ môi): B, M, P, PH, V, NH
+// - Sỉ âm (Kim - phát âm qua khe răng): C, Q, R, S, X
+// - Cổ âm (Thổ - phát âm từ cổ họng): A, Ă, Â, E, Ê, I, O, Ô, Ơ, U, Ư, Y, H
 export function getPhoneticElement(name: string): Wuxing {
   if (!name) return 'Thổ';
   const cleanName = name.trim().toUpperCase();
   
-  if (cleanName.startsWith('KH') || cleanName.startsWith('G')) return 'Mộc';
-  if (cleanName.startsWith('TR') || cleanName.startsWith('TH') || cleanName.startsWith('T') || cleanName.startsWith('N') || cleanName.startsWith('L') || cleanName.startsWith('D') || cleanName.startsWith('V') || cleanName.startsWith('Đ')) return 'Hỏa';
-  if (cleanName.startsWith('PH') || cleanName.startsWith('NH') || cleanName.startsWith('B') || cleanName.startsWith('M') || cleanName.startsWith('H') || cleanName.startsWith('P')) return 'Thủy';
-  if (cleanName.startsWith('C') || cleanName.startsWith('Q') || cleanName.startsWith('R') || cleanName.startsWith('S') || cleanName.startsWith('X') || cleanName.startsWith('K')) return 'Kim';
+  // Kiểm tra 2 ký tự đầu trước (các phụ âm ghép)
+  if (cleanName.startsWith('KH')) return 'Mộc';
+  if (cleanName.startsWith('TR') || cleanName.startsWith('TH') || cleanName.startsWith('CH') || cleanName.startsWith('GI')) return 'Hỏa';
+  if (cleanName.startsWith('PH') || cleanName.startsWith('NH')) return 'Thủy';
   
-  const vowels = ['A', 'Ă', 'Â', 'E', 'Ê', 'I', 'O', 'Ô', 'Ơ', 'U', 'Ư', 'Y'];
+  // Sau đó kiểm tra ký tự đầu tiên
   const firstChar = cleanName.charAt(0);
-  if (vowels.includes(firstChar)) return 'Thổ';
   
-  return 'Thổ'; // Default fallback
+  // Nha âm (Mộc)
+  if (firstChar === 'G' || firstChar === 'K') return 'Mộc';
+  
+  // Thiệt âm (Hỏa)
+  if (['D', 'Đ', 'L', 'N', 'T'].includes(firstChar)) return 'Hỏa';
+  
+  // Môi âm (Thủy)
+  if (['B', 'M', 'P', 'V'].includes(firstChar)) return 'Thủy';
+  
+  // Sỉ âm (Kim)
+  if (['C', 'Q', 'R', 'S', 'X'].includes(firstChar)) return 'Kim';
+  
+  // Cổ âm (Thổ) - Bao gồm nguyên âm và phụ âm họng 'H'
+  const vowelsAndGuttural = ['A', 'Ă', 'Â', 'E', 'Ê', 'I', 'O', 'Ô', 'Ơ', 'U', 'Ư', 'Y', 'H'];
+  if (vowelsAndGuttural.includes(firstChar)) return 'Thổ';
+  
+  return 'Thổ'; // Mặc định dự phòng
 }
 
 export function checkPhoneticHarmony(surEl: Wuxing, midEl: Wuxing | null, firstEl: Wuxing): boolean {
@@ -475,7 +496,9 @@ export function suggestNames(surNameStr: string, gender: 'Nam' | 'Nữ', bazi: B
   }
 
   // Three-word names
-  const middleNames = ['An', 'Minh', 'Ngọc', 'Bảo', 'Gia'];
+  const middleNames = gender === 'Nam'
+    ? ['Minh', 'Đức', 'Bảo', 'Gia', 'An', 'Thành', 'Quang', 'Khánh', 'Thanh', 'Bình', 'Nhật']
+    : ['Ngọc', 'Anh', 'Phương', 'Thảo', 'Hân', 'Thu', 'Cẩm', 'Mai', 'Yến', 'Châu', 'Hương', 'An'];
   const allDict = { ...MALE_NAMES, ...FEMALE_NAMES };
   
   for (const m of middleNames) {
