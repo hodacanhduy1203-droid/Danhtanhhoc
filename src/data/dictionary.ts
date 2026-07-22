@@ -116,6 +116,10 @@ export const LOOKUP_DICTIONARY: DictionaryItem[] = [
   { vietnamese: 'Vân', han: '匀', strokes: 4, element: 'Mộc', meaning: 'Thông minh, lanh lợi, một đời hanh thông phú quý thịnh vượng.' },
   { vietnamese: 'Nhật', han: '日', strokes: 4, element: 'Hỏa', meaning: 'Mặt trời soi sáng rực rỡ, chí khí kiên định.' },
   { vietnamese: 'Thủy', han: '水', strokes: 4, element: 'Thủy', meaning: 'Trong suốt, dịu dàng hiền hậu, uyển chuyển bao dung.' },
+  { vietnamese: 'Văn', han: '文', strokes: 4, element: 'Thủy', meaning: 'Người có học thức cao, nho nhã, tôn quý và tinh tế.' },
+  { vietnamese: 'Thị', han: '氏', strokes: 4, element: 'Kim', meaning: 'Chữ lót nữ truyền thống, đoan trang, dung mạo thanh nhã nết na.' },
+  { vietnamese: 'Tâm', han: '心', strokes: 4, element: 'Kim', meaning: 'Tấm lòng nhân ái, lương thiện, trí tuệ mẫn tiệp, bình an.' },
+  { vietnamese: 'Nhân', han: '仁', strokes: 4, element: 'Kim', meaning: 'Đức nhân ái, từ bi hiền hậu, sống khoan dung rộng lượng.' },
 
   // 5 strokes
   { vietnamese: 'Bản', han: '本', strokes: 5, element: 'Mộc', meaning: 'Ôn hòa, hiền hậu, cuộc đời bình dị hưng vượng lâu bền.' },
@@ -128,6 +132,8 @@ export const LOOKUP_DICTIONARY: DictionaryItem[] = [
   { vietnamese: 'Mão', han: '卯', strokes: 5, element: 'Mộc', meaning: 'Thanh nhàn, ôn hòa trọng nghĩa khí, tuổi già cát tường.' },
   { vietnamese: 'Ngọc', han: '玉', strokes: 5, element: 'Kim', meaning: 'Trí dũng song toàn, danh lợi vẹn toàn, phú quý cát tường vinh hiển.' },
   { vietnamese: 'Bình', han: '平', strokes: 5, element: 'Thủy', meaning: 'Cuộc sống an nhiên thuận lợi thanh bình.' },
+  { vietnamese: 'Thế', han: '世', strokes: 5, element: 'Kim', meaning: 'Ý chí oai phong lẫm liệt, tầm vóc lớn, cuộc đời cát tường thịnh vượng.' },
+  { vietnamese: 'Đông', han: '冬', strokes: 5, element: 'Thủy', meaning: 'Thâm trầm sâu sắc, tĩnh lặng kiên định, dồi dào nội lực.' },
 
   // 6 strokes
   { vietnamese: 'Cộng', han: '共', strokes: 6, element: 'Mộc', meaning: 'Được quý nhân nâng đỡ nâng tầm sự nghiệp.' },
@@ -138,6 +144,13 @@ export const LOOKUP_DICTIONARY: DictionaryItem[] = [
   { vietnamese: 'Húc', han: '旭', strokes: 6, element: 'Mộc', meaning: 'Như ánh dương buổi sớm rực rỡ cát tường thịnh vượng.' },
   { vietnamese: 'Quang', han: '光', strokes: 6, element: 'Hỏa', meaning: 'Hào quang rực rỡ, danh vọng hiển hách sau này.' },
   { vietnamese: 'An', han: '安', strokes: 6, element: 'Thổ', meaning: 'Gia đạo an bình, vạn sự thuận hòa phát lộc.' },
+  { vietnamese: 'Hữu', han: '有', strokes: 6, element: 'Thổ', meaning: 'Sở hữu tài năng, trí tuệ kiệt xuất, cuộc sống hưng thịnh phú quý.' },
+  { vietnamese: 'Hữu', han: '友', strokes: 6, element: 'Thổ', meaning: 'Trọng tình nghĩa, hữu hảo trung thực, quý nhân trợ lực dồi dào.' },
+  { vietnamese: 'Trọng', han: '仲', strokes: 6, element: 'Hỏa', meaning: 'Trọng hậu nghiêm túc, đứng đắn tự tin, chí khí phi thường.' },
+  { vietnamese: 'Như', han: '如', strokes: 6, element: 'Kim', meaning: 'Vạn sự như ý, cát tường, nết na thùy mị hiền hậu ôn hòa.' },
+  { vietnamese: 'Trúc', han: '竹', strokes: 6, element: 'Mộc', meaning: 'Quân tử thẳng thắn thanh cao, dẻo dai kiên cường bất khuất.' },
+  { vietnamese: 'Giang', han: '江', strokes: 6, element: 'Thủy', meaning: 'Hào sảng, bao dung rộng lớn tựa dòng sông xanh mượt trùng điệp.' },
+  { vietnamese: 'Toàn', han: '全', strokes: 6, element: 'Hỏa', meaning: 'Vẹn toàn hoàn mỹ, phú quý an khang, gia đạo viên mãn.' },
 
   // 7 strokes
   { vietnamese: 'Canh', han: '庚', strokes: 7, element: 'Kim', meaning: 'Thông minh lanh lợi, hậu vận hưng vượng.' },
@@ -147,10 +160,96 @@ export const LOOKUP_DICTIONARY: DictionaryItem[] = [
   { vietnamese: 'Ngôn', han: '言', strokes: 7, element: 'Mộc', meaning: 'Trọng nghĩa khí, từ tốn ôn hòa đức độ.' },
   { vietnamese: 'Ngâm', han: '吟', strokes: 7, element: 'Mộc', meaning: 'Ôn hậu chân thành, phú quý thanh nhàn hưng thịnh.' },
   { vietnamese: 'Tú', han: '秀', strokes: 7, element: 'Kim', meaning: 'Thanh tú cát tường, đắc lộc vinh hiển mỹ mãn.' },
+  { vietnamese: 'Hạnh', han: '杏', strokes: 7, element: 'Mộc', meaning: 'Nết na, ngọt ngào hiền hậu, cuộc đời an nhàn vui vẻ.' },
 
   // 8 strokes
   { vietnamese: 'Minh', han: '明', strokes: 8, element: 'Thủy', meaning: 'Thông tuệ kiệt xuất, tấm lòng trung trinh sáng tỏ.' },
   { vietnamese: 'Tùng', han: '松', strokes: 8, element: 'Mộc', meaning: 'Kiên cường, bền bỉ hiên ngang như tùng bách.' },
   { vietnamese: 'Lâm', han: '林', strokes: 8, element: 'Mộc', meaning: 'Rừng cây đại ngàn dồi dào sinh lực cát tường.' },
   { vietnamese: 'Vũ', han: '武', strokes: 8, element: 'Thủy', meaning: 'Hùng dũng, phi thường dũng cảm mưu lược lớn.' },
+  { vietnamese: 'Vũ', han: '雨', strokes: 8, element: 'Thủy', meaning: 'Cơn mưa lành tưới mát vạn vật, dồi dào tài lộc cát phúc.' },
+  { vietnamese: 'Kim', han: '金', strokes: 8, element: 'Kim', meaning: 'Tượng trưng cho vàng bạc cao quý, phú quý hưng thịnh vinh hiển.' },
+  { vietnamese: 'Hân', han: '欣', strokes: 8, element: 'Mộc', meaning: 'Hân hoan cát tường, luôn vui vẻ lạc quan, hạnh phúc viên mãn.' },
+  { vietnamese: 'Đông', han: '東', strokes: 8, element: 'Mộc', meaning: 'Phương Đông khởi sắc, rạng rỡ sinh khí tràn đầy năng lượng phát triển.' },
+  { vietnamese: 'Tây', han: '西', strokes: 6, element: 'Kim', meaning: 'Phương Tây yên bình ôn hòa, cuộc đời sung túc an nhàn.' },
+  { vietnamese: 'Hạnh', han: '幸', strokes: 8, element: 'Thủy', meaning: 'Hạnh phúc dồi dào, cát tường may mắn, gia đình êm ấm cát khánh.' },
+
+  // 9 strokes
+  { vietnamese: 'Xuân', han: '春', strokes: 9, element: 'Mộc', meaning: 'Mùa xuân ấm áp tươi vui, tràn đầy sức sống và sinh khí tươi mới.' },
+  { vietnamese: 'Khoa', han: '科', strokes: 9, element: 'Mộc', meaning: 'Đỗ đạt khoa bảng, thông minh kiệt xuất, công thành danh toại.' },
+  { vietnamese: 'Nam', han: '南', strokes: 9, element: 'Hỏa', meaning: 'Phương Nam ấm áp nhiệt thành, mạnh mẽ, hướng thiện cát tường.' },
+  { vietnamese: 'Hương', han: '香', strokes: 9, element: 'Thủy', meaning: 'Hương thơm cao nhã bay xa, tiếng thơm lưu truyền đức hạnh.' },
+  { vietnamese: 'Thu', han: '秋', strokes: 9, element: 'Kim', meaning: 'Mùa thu mát dịu, tâm tính ôn hòa điềm tĩnh sâu sắc.' },
+  { vietnamese: 'Hồng', han: '紅', strokes: 9, element: 'Thủy', meaning: 'Màu đỏ may mắn rực rỡ, hưng vượng giàu sang phú quý cát tường.' },
+  { vietnamese: 'Bách', han: '柏', strokes: 9, element: 'Mộc', meaning: 'Cây bách kiên cường dẻo dai trường thọ đón tuyết hiên ngang.' },
+  { vietnamese: 'Quân', han: '軍', strokes: 9, element: 'Mộc', meaning: 'Chí khí quân tử, bản lĩnh oai phong, dũng cảm kiên định.' },
+  { vietnamese: 'Tín', han: '信', strokes: 9, element: 'Kim', meaning: 'Uy tín trung thực, đáng tin cậy trọng nghĩa nghĩa khí, cát tường hưng thịnh.' },
+
+  // 10 strokes
+  { vietnamese: 'Phương', han: '芳', strokes: 10, element: 'Mộc', meaning: 'Cỏ thơm ngát tốt tươi, dung mạo tú lệ nết na đức hạnh lan tỏa.' },
+  { vietnamese: 'Hoa', han: '花', strokes: 10, element: 'Mộc', meaning: 'Như đóa hoa tươi thắm rực rỡ tràn đầy thanh xuân và sức sống.' },
+  { vietnamese: 'Nga', han: '娥', strokes: 10, element: 'Thủy', meaning: 'Mỹ nữ xinh đẹp kiều diễm, dung mạo đoan trang thanh nhã.' },
+  { vietnamese: 'Tấn', han: '晉', strokes: 10, element: 'Hỏa', meaning: 'Tiến lên phát triển mạnh mẽ, hưng vượng thịnh vượng thăng tiến vượt trội.' },
+  { vietnamese: 'Triết', han: '哲', strokes: 10, element: 'Hỏa', meaning: 'Triết lý sáng suốt, thấu triệt nhân tình thế thái, thông tuệ xuất chúng.' },
+  { vietnamese: 'Thái', han: '泰', strokes: 10, element: 'Thủy', meaning: 'Thái bình an khang, yên bình thanh thản thịnh vượng hanh thông.' },
+  { vietnamese: 'Tường', han: '祥', strokes: 10, element: 'Kim', meaning: 'Điềm lành cát tường như ý, mang lại phúc lộc khánh hỷ cho gia đạo.' },
+  { vietnamese: 'Quyên', han: '娟', strokes: 10, element: 'Thủy', meaning: 'Duyên dáng thanh cao, nết na thùy mị tao nhã hiền hậu.' },
+  { vietnamese: 'Hạ', han: '夏', strokes: 10, element: 'Hỏa', meaning: 'Mùa hè rực rỡ dồi dào năng lượng khát vọng và tinh thần sảng khoái.' },
+
+  // 11 strokes
+  { vietnamese: 'Anh', han: '英', strokes: 11, element: 'Mộc', meaning: 'Tinh anh anh kiệt xuất sắc, thông minh mẫn tiệp kiệt xuất phi thường.' },
+  { vietnamese: 'Đắc', han: '得', strokes: 11, element: 'Kim', meaning: 'Đạt được mục tiêu, vạn sự cát lợi đắc tâm đắc ý, tài lộc dồi dào hưng thịnh.' },
+  { vietnamese: 'Hải', han: '海', strokes: 11, element: 'Thủy', meaning: 'Biển cả mênh mông phóng khoáng dũng cảm, bao dung vĩ đại.' },
+  { vietnamese: 'Khang', han: '康', strokes: 11, element: 'Mộc', meaning: 'An khang thịnh vượng, khỏe mạnh bình an vạn sự cát khánh.' },
+  { vietnamese: 'Cường', han: '強', strokes: 11, element: 'Mộc', meaning: 'Mạnh mẽ dũng cảm kiên cường vượt nghịch cảnh đạt vinh hiển.' },
+  { vietnamese: 'Châu', han: '珠', strokes: 11, element: 'Kim', meaning: 'Trân châu ngọc quý vô giá, dung mạo đoan trang kiêu sa cát tường.' },
+  { vietnamese: 'Mai', han: '梅', strokes: 11, element: 'Mộc', meaning: 'Hoa mai nở trong tuyết lạnh thanh tao kiên trì thanh nhã.' },
+  { vietnamese: 'Cúc', han: '菊', strokes: 11, element: 'Mộc', meaning: 'Hoa cúc kiêu hãnh bền bỉ, cốt cách thanh tao đài các dẻo dai.' },
+  { vietnamese: 'Tuyết', han: '雪', strokes: 11, element: 'Thủy', meaning: 'Tuyết trắng thanh khiết trong lành tao nhã hiền diệu.' },
+  { vietnamese: 'Tiến', han: '進', strokes: 11, element: 'Hỏa', meaning: 'Tiến lên không ngừng vươn cao, nỗ lực đạt thành tựu hiển hách.' },
+  { vietnamese: 'Quốc', han: '國', strokes: 11, element: 'Mộc', meaning: 'Hùng vĩ chí khí đại cục quốc gia, tiền đồ rộng lớn hiển đạt.' },
+
+  // 12 strokes
+  { vietnamese: 'Đăng', han: '登', strokes: 12, element: 'Hỏa', meaning: 'Đăng khoa đỗ đạt, thăng tiến vươn lên tầm cao vinh hiển.' },
+  { vietnamese: 'Thiện', han: '善', strokes: 12, element: 'Kim', meaning: 'Thiện lương tốt đẹp, từ bi bác ái mang đức độ cát lành muôn phương.' },
+  { vietnamese: 'Kiệt', han: '傑', strokes: 12, element: 'Mộc', meaning: 'Kiệt xuất kiệt hiệt phi thường xuất chúng, đứng đầu vạn người.' },
+  { vietnamese: 'Trí', han: '智', strokes: 12, element: 'Hỏa', meaning: 'Trí tuệ thông thái, tinh anh sáng suốt thấu hiểu đạo lý cao thâm.' },
+  { vietnamese: 'Vân', han: '雲', strokes: 12, element: 'Thủy', meaning: 'Áng mây tự do bồng bềnh thong dong thảnh thơi cát tường.' },
+  { vietnamese: 'Thắng', han: '勝', strokes: 12, element: 'Kim', meaning: 'Chiến thắng thành công phi thường hưng thịnh phát triển vượt trội.' },
+  { vietnamese: 'Phát', han: '發', strokes: 12, element: 'Thủy', meaning: 'Phát tài phát đạt hưng vượng giàu sang phú quý tiến lên mãnh liệt.' },
+
+  // 13 strokes
+  { vietnamese: 'Duy', han: '維', strokes: 14, element: 'Thổ', meaning: 'Gìn giữ, duy trì kỷ cương gia tộc; tư duy mẫn tiệp sâu sắc thông tuệ.' },
+  { vietnamese: 'Duy', han: '唯', strokes: 11, element: 'Thổ', meaning: 'Duy nhất độc tôn quý báu ôn hòa thông thái.' },
+  { vietnamese: 'Ý', han: '意', strokes: 13, element: 'Thổ', meaning: 'Ý chí quyết tâm kiên định, vạn sự như ý thuận lợi cát bảo.' },
+  { vietnamese: 'Nghĩa', han: '義', strokes: 13, element: 'Thổ', meaning: 'Sống chính nghĩa, trọng tình nghĩa, hào sảng dũng khí bao dung.' },
+  { vietnamese: 'Phúc', han: '福', strokes: 13, element: 'Thủy', meaning: 'Phúc lộc song toàn gặt hái ngập tràn điềm khánh, cát khánh muôn đời.' },
+  { vietnamese: 'Phước', han: '福', strokes: 13, element: 'Thủy', meaning: 'Phúc lộc cát tường phúc trạch dồi dào hạnh phúc viên mãn.' },
+  { vietnamese: 'Trang', han: '莊', strokes: 13, element: 'Mộc', meaning: 'Đoan trang trang nghiêm đoan chính hiền thục dung từ cát bảo.' },
+  { vietnamese: 'Khê', han: '溪', strokes: 13, element: 'Thủy', meaning: 'Dòng suối mát lành thanh thanh tĩnh tĩnh tự tại hanh thông.' },
+  { vietnamese: 'Liên', han: '蓮', strokes: 13, element: 'Mộc', meaning: 'Hoa sen gần bùn không hôi tanh cốt cách tôn quý thanh cao mộc mạc.' },
+  { vietnamese: 'Lộc', han: '祿', strokes: 13, element: 'Hỏa', meaning: 'Tài lộc hưng vượng, lộc trời ban phát phú quý vinh hiển lâu bền.' },
+
+  // 14 strokes
+  { vietnamese: 'Gia', han: '嘉', strokes: 14, element: 'Mộc', meaning: 'Tốt lành vui vẻ khánh hỷ, gia đình êm ấm cát tường viên mãn.' },
+  { vietnamese: 'Vinh', han: '榮', strokes: 14, element: 'Mộc', meaning: 'Vinh hiển vinh hoa vẻ vang phú quý, tương lai chói lọi rạng danh.' },
+  { vietnamese: 'Bích', han: '碧', strokes: 14, element: 'Thủy', meaning: 'Ngọc bích xanh biếc ôn nhu hiền dịu cao sang trác việt.' },
+  { vietnamese: 'Phượng', han: '鳳', strokes: 14, element: 'Thủy', meaning: 'Phượng hoàng cao quý cát tường, điềm lành hiển hách lộng lẫy cát bảo.' },
+
+  // 15 strokes
+  { vietnamese: 'Khánh', han: '慶', strokes: 15, element: 'Mộc', meaning: 'Hân hoan chào mừng điềm vui khánh hỷ cát tường phúc trạch ngập tràn.' },
+  { vietnamese: 'Đức', han: '德', strokes: 15, element: 'Hỏa', meaning: 'Đạo đức nhân từ hiền hậu, đức trọng quỷ thần kinh, vạn sự thuận hòa.' },
+  { vietnamese: 'Huy', han: '輝', strokes: 15, element: 'Thủy', meaning: 'Huy hoàng chói lọi, ánh sáng rực rỡ công thành danh toại hiển vinh.' },
+  { vietnamese: 'Diệp', han: '葉', strokes: 15, element: 'Mộc', meaning: 'Lá ngọc cành vàng gia thế trâm anh thế phiệt tôn quý cát hỷ.' },
+  { vietnamese: 'Kiều', han: '嬌', strokes: 15, element: 'Mộc', meaning: 'Kiều diễm xinh đẹp dịu dàng kiêu sa quý phái tao nhã.' },
+
+  // 16 strokes+
+  { vietnamese: 'Đạt', han: '達', strokes: 16, element: 'Hỏa', meaning: 'Thành đạt hanh thông, vươn tầm ước mơ đạt hiển hách tối cao.' },
+  { vietnamese: 'Long', han: '龍', strokes: 16, element: 'Thủy', meaning: 'Rồng oai linh tôn quý phi thường đại diện cát tường quyền lực vinh hiển.' },
+  { vietnamese: 'Cẩm', han: '錦', strokes: 16, element: 'Kim', meaning: 'Gấm vóc lụa là lộng lẫy hiển vinh, phú quý dư dả thịnh đạt thịnh vượng.' },
+  { vietnamese: 'Vy', han: '薇', strokes: 16, element: 'Mộc', meaning: 'Hoa tường vy thanh cao mềm dẻo kiên trì bền bỉ tràn trề khí lực.' },
+  { vietnamese: 'Yến', han: '燕', strokes: 16, element: 'Thổ', meaning: 'Như chim yến mang điềm báo mùa xuân cát lành êm ấm muôn phương.' },
+  { vietnamese: 'Bảo', han: '寶', strokes: 20, element: 'Hỏa', meaning: 'Bảo vật tôn kính trân quý báu bối vô song rực rỡ cao sang phú quý.' },
+  { vietnamese: 'Quỳnh', han: '瓊', strokes: 20, element: 'Mộc', meaning: 'Ngọc quỳnh thanh khiết hoa quỳnh dịu dàng tao nhã tinh khôi.' },
+  { vietnamese: 'Linh', han: '靈', strokes: 24, element: 'Hỏa', meaning: 'Linh hoạt, linh thông huyền diệu thông minh nhạy bén xuất thần.' },
 ];

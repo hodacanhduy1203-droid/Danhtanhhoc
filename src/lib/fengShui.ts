@@ -1,5 +1,5 @@
 import { Solar } from 'lunar-javascript';
-import { SURNAMES, MALE_NAMES, FEMALE_NAMES, HanCharacter } from '../data/dictionary';
+import { SURNAMES, MALE_NAMES, FEMALE_NAMES, HanCharacter, LOOKUP_DICTIONARY } from '../data/dictionary';
 
 export type Wuxing = 'Kim' | 'Mộc' | 'Thủy' | 'Hỏa' | 'Thổ';
 
@@ -518,4 +518,195 @@ export function suggestNames(surNameStr: string, gender: 'Nam' | 'Nữ', bazi: B
     if (!a.matchElement && b.matchElement) return 1;
     return 0;
   }).slice(0, 15);
+}
+
+export function findHanCharacter(word: string): HanCharacter {
+  if (!word) return { char: '?', strokes: 5, element: 'Thổ', meaning: 'Chưa xác định' };
+  const clean = word.trim();
+
+  // Try direct match first (handling capitalized words exactly as specified in the dictionaries)
+  const capitalized = clean.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+
+  if (SURNAMES[capitalized]) return SURNAMES[capitalized];
+  if (MALE_NAMES[capitalized]) return MALE_NAMES[capitalized];
+  if (FEMALE_NAMES[capitalized]) return FEMALE_NAMES[capitalized];
+
+  const foundInDict = LOOKUP_DICTIONARY.find(item => item.vietnamese.toLowerCase() === clean.toLowerCase());
+  if (foundInDict) {
+    return {
+      char: foundInDict.han,
+      strokes: foundInDict.strokes,
+      element: foundInDict.element,
+      meaning: foundInDict.meaning
+    };
+  }
+
+  // If there are multiple words, split and resolve each recursively to combine them elegantly
+  const subWords = clean.split(/\s+/).filter(Boolean);
+  if (subWords.length > 1) {
+    const chars = subWords.map(sw => findHanCharacter(sw));
+    const combinedChar = chars.map(c => c.char).join('');
+    const totalStrokes = chars.reduce((sum, c) => sum + c.strokes, 0);
+    const finalElement = chars[chars.length - 1].element;
+    const combinedMeaning = chars.map((c, i) => `[${subWords[i].toUpperCase()}]: ${c.meaning}`).join('; ');
+
+    return {
+      char: combinedChar,
+      strokes: totalStrokes,
+      element: finalElement,
+      meaning: combinedMeaning
+    };
+  }
+
+  // Fallback estimation using sound rules
+  const element = getPhoneticElement(capitalized);
+  // An estimate of strokes based on spelling length or consonant structure to keep it interesting
+  const strokes = Math.min(24, Math.max(3, clean.length * 2 - 1));
+
+  return {
+    char: '?',
+    strokes,
+    element,
+    meaning: 'Chữ này chưa có thông tin giải nghĩa trong thư viện, hệ thống tự động suy đoán thuộc tính âm luật ngũ hành.'
+  };
+}
+
+export function evaluateCustomName(fullNameStr: string, bazi: BaziInfo): SuggestedName | null {
+  if (!fullNameStr) return null;
+  const words = fullNameStr.trim().split(/\s+/).filter(Boolean);
+  if (words.length < 2) return null;
+
+  let surNameStr = '';
+  let middleNameStr = '';
+  let firstNameStr = '';
+
+  // Handle compound surname like "Hồ Đắc" case-insensitively
+  const potentialCompound = words[0] + ' ' + words[1];
+  const compoundKey = Object.keys(SURNAMES).find(
+    k => k.toLowerCase() === potentialCompound.toLowerCase()
+  );
+
+  if (words.length >= 3 && compoundKey) {
+    surNameStr = compoundKey;
+    if (words.length === 3) {
+      firstNameStr = words[2];
+    } else {
+      middleNameStr = words.slice(2, words.length - 1).join(' ');
+      firstNameStr = words[words.length - 1];
+    }
+  } else {
+    surNameStr = words[0];
+    if (words.length === 2) {
+      firstNameStr = words[1];
+    } else {
+      middleNameStr = words.slice(1, words.length - 1).join(' ');
+      firstNameStr = words[words.length - 1];
+    }
+  }
+
+  const surNameChar = findHanCharacter(surNameStr);
+  const middleNameChar = middleNameStr ? findHanCharacter(middleNameStr) : null;
+  const firstNameChar = findHanCharacter(firstNameStr);
+
+  const nguCach = calculateNguCach(surNameChar, middleNameChar, firstNameChar);
+  
+  // Core Scoring Engine based on the 5 Books' theories
+  let currentScore = nguCach.goodCount * 10; // Max 50 points from Ngu Cach
+  
+  let dungThanMatch = false;
+  let hyThanMatch = false;
+  const targetEl = bazi.dungThan;
+  const supportEl = bazi.hyThan;
+  const obstacleEl = bazi.kyThan;
+  
+  const nameElements = middleNameChar ? [middleNameChar.element, firstNameChar.element] : [firstNameChar.element];
+  if (nameElements.includes(targetEl)) {
+    dungThanMatch = true;
+    currentScore += 12;
+  }
+  if (nameElements.includes(supportEl)) {
+    hyThanMatch = true;
+    currentScore += 8;
+  }
+  if (nameElements.includes(obstacleEl)) {
+    currentScore -= 5;
+  }
+  
+  // Thần Kỷ Kinh: Nhan Cach is the soul (Max 15 points)
+  let nhanCachBonus = 0;
+  if (nguCach.nhanCach.isGood) {
+    nhanCachBonus += 8;
+  }
+  if (nguCach.nhanCach.element === targetEl || nguCach.nhanCach.element === supportEl) {
+    nhanCachBonus += 7;
+  }
+  currentScore += nhanCachBonus;
+  
+  // Khoa Học Đặt Tên & Bí Mật Vận Mệnh: Phonetic harmony (Max 15 points)
+  const surPhonetic = getPhoneticElement(surNameStr);
+  const midPhonetic = middleNameStr ? getPhoneticElement(middleNameStr) : null;
+  const firstPhonetic = getPhoneticElement(firstNameStr);
+  const phoneticElements = middleNameStr ? [surPhonetic, midPhonetic, firstPhonetic] : [surPhonetic, firstPhonetic];
+  const phoneticHarmonious = checkPhoneticHarmony(surPhonetic, midPhonetic, firstPhonetic);
+  if (phoneticHarmonious) {
+    currentScore += 15;
+  } else {
+    currentScore += 5;
+  }
+  
+  // Tam Tài Nhân Duyên Thư (Max 15 points)
+  if (nguCach.tamTai.status === 'Cát') {
+    currentScore += 15;
+  } else if (nguCach.tamTai.status === 'Bình') {
+    currentScore += 5;
+  } else {
+    currentScore -= 10;
+  }
+
+  const finalScore = Math.min(100, Math.max(10, currentScore));
+  
+  // Generate qualitative book theories feedback for the user interface
+  const bookTheoriesFeedback: string[] = [];
+  
+  // 1. Thần Kỷ Kinh
+  if (nguCach.nhanCach.isGood) {
+    bookTheoriesFeedback.push(`Thần Kỷ Kinh: Nhân Cách [${nguCach.nhanCach.strokes} nét - ${nguCach.nhanCach.element}] đạt Cát tinh, gia tăng bản lĩnh và kích hoạt vinh hiển.`);
+  } else {
+    bookTheoriesFeedback.push(`Thần Kỷ Kinh: Nhân Cách [${nguCach.nhanCach.strokes} nét] chưa đạt cát, khuyên phối hợp cùng nỗ lực hậu thiên.`);
+  }
+  
+  // 2. Ngũ Hành Danh Tánh Học Luận
+  if (dungThanMatch) {
+    bookTheoriesFeedback.push(`Ngũ Hành Luận: Tự hình bổ khuyết trực tiếp cho Dụng Thần [${targetEl}] của Bát tự, điều hòa chân khí khí lực.`);
+  } else if (hyThanMatch) {
+    bookTheoriesFeedback.push(`Ngũ Hành Luận: Chữ thuộc hành [${supportEl}] là Hỷ Thần trợ lực, củng cố sinh khí bản mệnh vững vàng.`);
+  } else {
+    bookTheoriesFeedback.push(`Ngũ Hành Luận: Ngũ hành tự hình bình hòa, không gây xung khắc hay bế tắc với Bát tự tiên thiên.`);
+  }
+  
+  // 3. Khoa Học Đặt Tên & Bí Mật Vận Mệnh
+  if (phoneticHarmonious) {
+    const phoneticFlow = middleNameStr ? `${surPhonetic} ➔ ${midPhonetic} ➔ ${firstPhonetic}` : `${surPhonetic} ➔ ${firstPhonetic}`;
+    bookTheoriesFeedback.push(`Bí Mật Vận Mệnh: Âm luật phát âm [${phoneticFlow}] tương sinh hài hòa, kích hoạt sóng rung cát lành.`);
+  } else {
+    bookTheoriesFeedback.push(`Bí Mật Vận Mệnh: Luồng âm thanh bình hòa, âm hưởng ôn nhu, khuyên dùng cách gọi tên trìu mến.`);
+  }
+  
+  // 4. Tam Tài Nhân Duyên Thư
+  bookTheoriesFeedback.push(`Tam Tài Nhân Duyên: Phối hợp Thiên - Nhân - Địa [${nguCach.tamTai.combination}] đạt bậc [${nguCach.tamTai.status}], ${nguCach.tamTai.description.split('.')[0]}.`);
+
+  return {
+    fullName: fullNameStr.trim(),
+    surName: surNameChar,
+    middleName: middleNameChar,
+    firstName: firstNameChar,
+    nguCach,
+    score: finalScore,
+    matchElement: bazi.missingElements.length > 0 ? (bazi.missingElements.includes(firstNameChar.element) || (middleNameChar !== null && bazi.missingElements.includes(middleNameChar.element))) : true,
+    dungThanMatch,
+    hyThanMatch,
+    phoneticElements,
+    phoneticHarmonious,
+    bookTheoriesFeedback
+  };
 }

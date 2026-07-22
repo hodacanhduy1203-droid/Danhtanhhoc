@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getBaziInfo, suggestNames, BaziInfo } from './lib/fengShui';
+import { getBaziInfo, suggestNames, evaluateCustomName, BaziInfo } from './lib/fengShui';
 import { SURNAMES, LOOKUP_DICTIONARY } from './data/dictionary';
 import { REFERENCE_BOOKS } from './data/books';
 
@@ -11,7 +11,8 @@ export default function App() {
   const [birthTime, setBirthTime] = useState('');
   
   const [submitted, setSubmitted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dating' | 'dictionary' | 'books'>('dating');
+  const [activeTab, setActiveTab] = useState<'dating' | 'evaluate' | 'dictionary' | 'books'>('dating');
+  const [customFullName, setCustomFullName] = useState('');
 
   // Search state for dictionary
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,6 +30,23 @@ export default function App() {
       return null;
     }
   }, [submitted, birthDate, birthTime]);
+
+  const baziDataForEvaluation = useMemo(() => {
+    if (!birthDate || !birthTime) return null;
+    try {
+      const [year, month, day] = birthDate.split('-');
+      const [hour, minute] = birthTime.split(':');
+      const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+      return getBaziInfo(date);
+    } catch (e) {
+      return null;
+    }
+  }, [birthDate, birthTime]);
+
+  const evaluatedResult = useMemo(() => {
+    if (!customFullName || !baziDataForEvaluation) return null;
+    return evaluateCustomName(customFullName, baziDataForEvaluation);
+  }, [customFullName, baziDataForEvaluation]);
 
   const suggestions = useMemo(() => {
     if (!baziData || !fatherSurname) return [];
@@ -82,6 +100,12 @@ export default function App() {
               className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'dating' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
             >
               ☯ Đặt Tên Phong Thủy
+            </button>
+            <button
+              onClick={() => setActiveTab('evaluate')}
+              className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'evaluate' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+            >
+              🔍 Kiểm Tra Họ Tên
             </button>
             <button
               onClick={() => setActiveTab('dictionary')}
@@ -345,6 +369,224 @@ export default function App() {
                     </div>
                   )}
                 </AnimatePresence>
+              </section>
+            </motion.div>
+          ) : activeTab === 'evaluate' ? (
+            <motion.div
+              key="evaluate-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col md:flex-row gap-8 items-start w-full"
+            >
+              {/* Left Form: Bazi & Name Input */}
+              <section className="w-full md:w-1/3 bg-black/20 p-6 rounded-2xl border border-white/10 shrink-0 shadow-xl space-y-6">
+                <div className="space-y-1">
+                  <h2 className="text-xs uppercase tracking-widest text-amber-500/80 font-semibold">Thông Tin Bản Mệnh</h2>
+                  <p className="text-[10px] text-white/40 italic">Nhập ngày giờ sinh để đối chiếu Ngũ Hành</p>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] uppercase opacity-50 tracking-widest">Ngày sinh (DL)</label>
+                    <input 
+                      type="date" 
+                      value={birthDate}
+                      onChange={(e) => setBirthDate(e.target.value)}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500/50 transition-colors"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] uppercase opacity-50 tracking-widest">Giờ sinh</label>
+                    <input 
+                      type="time" 
+                      value={birthTime}
+                      onChange={(e) => setBirthTime(e.target.value)}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500/50 transition-colors"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                  </div>
+                </div>
+
+                <div className="border-t border-white/10 pt-5 space-y-4">
+                  <div className="space-y-1">
+                    <h2 className="text-xs uppercase tracking-widest text-amber-500/80 font-semibold font-sans">Họ Tên Cần Kiểm Tra</h2>
+                    <p className="text-[10px] text-white/40 italic">Nhập đầy đủ Họ, Tên đệm và Tên chính</p>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] uppercase opacity-50 tracking-widest">Họ & Tên đầy đủ</label>
+                    <input 
+                      type="text" 
+                      value={customFullName}
+                      onChange={(e) => setCustomFullName(e.target.value)}
+                      placeholder="Ví dụ: Nguyễn Minh Đức"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-slate-100 placeholder-white/20 focus:outline-none focus:border-amber-500/50 transition-colors"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              {/* Right Results: Evaluation Breakdown */}
+              <section className="w-full md:w-2/3 flex flex-col gap-6 w-full">
+                {!birthDate || !birthTime ? (
+                  <div className="flex flex-col items-center justify-center min-h-[350px] text-white/20 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] p-6 text-center w-full">
+                    <span className="text-3xl mb-3">📅</span>
+                    <p className="text-xs uppercase tracking-widest max-w-sm leading-relaxed">Vui lòng nhập Ngày sinh & Giờ sinh trước để hệ thống thiết lập Tứ Trụ bản mệnh.</p>
+                  </div>
+                ) : !customFullName ? (
+                  <div className="flex flex-col items-center justify-center min-h-[350px] text-white/20 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] p-6 text-center w-full">
+                    <span className="text-3xl mb-3">✍️</span>
+                    <p className="text-xs uppercase tracking-widest max-w-sm leading-relaxed">Nhập đầy đủ Họ và Tên bên trái để hệ thống lập quẻ khoa học danh tánh học.</p>
+                  </div>
+                ) : !evaluatedResult ? (
+                  <div className="flex flex-col items-center justify-center min-h-[350px] text-white/20 border border-dashed border-white/10 rounded-2xl bg-white/[0.02] p-6 text-center w-full">
+                    <span className="text-3xl mb-3">⚠️</span>
+                    <p className="text-xs uppercase tracking-widest max-w-sm leading-relaxed">Vui lòng nhập tên có ít nhất 2 chữ (Họ và Tên chính).</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-6 w-full">
+                    
+                    {/* Bazi Context Block */}
+                    {baziDataForEvaluation && (
+                      <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden shadow-lg w-full">
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="text-[10px] uppercase tracking-widest text-amber-500 font-semibold font-sans">Bản Mệnh Đối Chiếu</h4>
+                          <span className="text-[10px] bg-amber-500/10 text-amber-300 px-2 py-0.5 rounded font-mono">Bát Tự Tứ Trụ</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="p-2 bg-black/30 border border-amber-500/10 rounded-lg text-center">
+                            <span className="text-[9px] uppercase tracking-wider text-emerald-400 font-bold block mb-0.5">Dụng Thần</span>
+                            <span className="text-sm font-serif font-semibold text-white">{baziDataForEvaluation.dungThan}</span>
+                          </div>
+                          <div className="p-2 bg-black/30 border border-amber-500/10 rounded-lg text-center">
+                            <span className="text-[9px] uppercase tracking-wider text-amber-400 font-bold block mb-0.5">Hỷ Thần</span>
+                            <span className="text-sm font-serif font-semibold text-white">{baziDataForEvaluation.hyThan}</span>
+                          </div>
+                          <div className="p-2 bg-black/30 border border-red-500/10 rounded-lg text-center">
+                            <span className="text-[9px] uppercase tracking-wider text-red-400 font-bold block mb-0.5">Kỵ Thần</span>
+                            <span className="text-sm font-serif font-semibold text-white">{baziDataForEvaluation.kyThan}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Evaluation Result Card */}
+                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col gap-5 relative overflow-hidden shadow-xl w-full">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+                      
+                      <div className="flex items-start justify-between border-b border-white/5 pb-5 flex-wrap gap-4">
+                        <div>
+                          <div className="flex flex-wrap items-baseline gap-2 mb-1">
+                            <h3 className="text-2xl sm:text-3xl font-serif text-white tracking-wide">
+                              {evaluatedResult.fullName}
+                            </h3>
+                            <span className="text-xs text-white/40 font-mono">
+                              ({evaluatedResult.phoneticElements.join(' ➔ ')})
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-white/50">
+                            Họ Tên tự hình quốc ngữ, tra cứu vận mệnh khoa học
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-1.5 shrink-0 ml-auto">
+                          <span className="text-2xl sm:text-3xl font-serif text-amber-500 flex items-baseline gap-1 font-bold">
+                            {evaluatedResult.score} <span className="text-[10px] uppercase opacity-60 font-sans tracking-widest font-normal text-white/60">/100 điểm</span>
+                          </span>
+                          <div className="flex flex-wrap gap-1 justify-end">
+                            {evaluatedResult.dungThanMatch && (
+                              <span className="text-[9px] text-emerald-400 font-medium uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Đắc Dụng Thần</span>
+                            )}
+                            {evaluatedResult.hyThanMatch && (
+                              <span className="text-[9px] text-amber-400 font-medium uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Trợ Hỷ Thần</span>
+                            )}
+                            {evaluatedResult.phoneticHarmonious && (
+                              <span className="text-[9px] text-cyan-400 font-medium uppercase tracking-wider bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">Âm Dương Sinh</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Characters Breakdown */}
+                      <div className="flex flex-col gap-3">
+                        <h4 className="text-[10px] uppercase tracking-widest text-amber-500 font-semibold">Tầm Nguyên Tự Hình Chi Tiết</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          
+                          {/* Họ */}
+                          <div className="p-3 bg-black/20 border border-white/5 rounded-xl space-y-1">
+                            <div className="flex justify-between items-baseline">
+                              <span className="text-xs font-serif text-amber-400 font-bold">{evaluatedResult.surName.char} ({evaluatedResult.surName.strokes} nét)</span>
+                              <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 text-white/60">{evaluatedResult.surName.element}</span>
+                            </div>
+                            <span className="text-[10px] uppercase opacity-40 font-semibold block tracking-wider mt-1">Vai trò: Họ (Hạ thiên)</span>
+                            <p className="text-[11px] text-white/70 italic leading-snug">{evaluatedResult.surName.meaning}</p>
+                          </div>
+
+                          {/* Tên Đệm */}
+                          {evaluatedResult.middleName ? (
+                            <div className="p-3 bg-black/20 border border-white/5 rounded-xl space-y-1">
+                              <div className="flex justify-between items-baseline">
+                                <span className="text-xs font-serif text-amber-400 font-bold">{evaluatedResult.middleName.char} ({evaluatedResult.middleName.strokes} nét)</span>
+                                <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 text-white/60">{evaluatedResult.middleName.element}</span>
+                              </div>
+                              <span className="text-[10px] uppercase opacity-40 font-semibold block tracking-wider mt-1">Vai trò: Đệm (Nhân duyên)</span>
+                              <p className="text-[11px] text-white/70 italic leading-snug">{evaluatedResult.middleName.meaning}</p>
+                            </div>
+                          ) : (
+                            <div className="p-3 bg-black/10 border border-dashed border-white/5 rounded-xl flex items-center justify-center text-white/20 text-[10px] uppercase tracking-wider font-semibold">
+                              Không có đệm
+                            </div>
+                          )}
+
+                          {/* Tên Chính */}
+                          <div className="p-3 bg-black/20 border border-white/5 rounded-xl space-y-1">
+                            <div className="flex justify-between items-baseline">
+                              <span className="text-xs font-serif text-amber-400 font-bold">{evaluatedResult.firstName.char} ({evaluatedResult.firstName.strokes} nét)</span>
+                              <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 text-white/60">{evaluatedResult.firstName.element}</span>
+                            </div>
+                            <span className="text-[10px] uppercase opacity-40 font-semibold block tracking-wider mt-1">Vai trò: Tên (Hậu thiên)</span>
+                            <p className="text-[11px] text-white/70 italic leading-snug">{evaluatedResult.firstName.meaning}</p>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {/* Ngu Cach Grid */}
+                      <div className="space-y-2 border-t border-white/5 pt-5">
+                        <h4 className="text-[10px] uppercase tracking-widest text-amber-500 font-semibold">Cục Diện Ngũ Cách Phong Thủy</h4>
+                        <div className="grid grid-cols-5 gap-2 text-center relative z-10">
+                          <CachBlock name="Thiên" data={evaluatedResult.nguCach.thienCach} />
+                          <CachBlock name="Nhân" data={evaluatedResult.nguCach.nhanCach} />
+                          <CachBlock name="Địa" data={evaluatedResult.nguCach.diaCach} />
+                          <CachBlock name="Ngoại" data={evaluatedResult.nguCach.ngoaiCach} />
+                          <CachBlock name="Tổng" data={evaluatedResult.nguCach.tongCach} />
+                        </div>
+                      </div>
+
+                      {/* Theories Feedback */}
+                      <div className="bg-black/30 border border-white/5 rounded-xl p-4 flex flex-col gap-2 relative z-10 w-full">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-[10px] text-amber-500 font-bold uppercase tracking-widest">Luận Giải Cổ Thư & Khoa Học Danh Tánh</span>
+                          <span className="text-[8px] bg-amber-500/10 text-amber-300 px-1.5 py-0.5 rounded font-mono">Chính Tông Học Thuật</span>
+                        </div>
+                        <ul className="list-disc list-inside text-[11px] text-white/80 space-y-1.5 leading-relaxed pl-1">
+                          {evaluatedResult.bookTheoriesFeedback.map((feedback, fIdx) => (
+                            <li key={fIdx} className="marker:text-amber-500/60">
+                              {feedback}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                    </div>
+
+                  </div>
+                )}
               </section>
             </motion.div>
           ) : activeTab === 'dictionary' ? (
